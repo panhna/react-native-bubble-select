@@ -43,11 +43,12 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
           if (node.gradient !== null) {
             gradient = node.getGradient();
           } else if (node.color !== null) {
-            gradient = BubbleGradient(
-              Color.parseColor(node.color),
-              Color.parseColor(node.color),
-              BubbleGradient.VERTICAL
-            )
+            // gradient = BubbleGradient(
+            //   Color.parseColor(node.color),
+            //   Color.parseColor(node.color),
+            //   BubbleGradient.VERTICAL
+            // )
+						color = Color.parseColor(node.color)
           }
         }
       }
