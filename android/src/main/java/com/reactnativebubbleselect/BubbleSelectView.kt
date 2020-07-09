@@ -2,6 +2,8 @@ package com.reactnativebubbleselect
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
@@ -13,7 +15,7 @@ import com.igalata.bubblepicker.model.PickerItem
 import com.igalata.bubblepicker.rendering.BubblePicker
 import com.igalata.bubblepicker.BubblePickerListener
 
-class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEventListener, BubblePickerListener {
+class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEventListener, BubblePickerListener, View.OnLongClickListener {
   val bubblePicker: BubblePicker
   val nodes: ArrayList<BubbleSelectNodeView> = ArrayList()
 
@@ -22,6 +24,8 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
     bubblePicker = findViewById(R.id.bubble_picker);
     bubblePicker.listener = this;
     bubblePicker.maxSelectedCount = 10000
+    bubblePicker.isLongClickable = false
+    bubblePicker.setOnLongClickListener(this);
     context.addLifecycleEventListener(this);
     setupBubblePickerAdapter()
   }
@@ -106,5 +110,9 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
 
     val reactContext = context as ReactContext
     reactContext.getNativeModule(UIManagerModule::class.java).eventDispatcher.dispatchEvent(event)
+  }
+
+  override fun onLongClick(v: View?): Boolean {
+    return false
   }
 }
