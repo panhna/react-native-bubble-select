@@ -127,10 +127,10 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-	implementation 'org.jbox2d:jbox2d-library:2.1.2.2'
-	implementation 'org.slf4j:slf4j-api:1.7.22'
+	// implementation 'org.jbox2d:jbox2d-library:2.1.2.2'
+	// implementation 'org.slf4j:slf4j-api:1.7.22'
 
-//  implementation 'com.github.jesster2k10:Bubble-Picker:v0.3-beta'
+ implementation 'com.github.jesster2k10:Bubble-Picker:v0.3-beta'
 //	implementation files('libs/jbox2d-library-2.1.2.2.jar')
 //	implementation files('libs/slf4j-api-1.7.22.jar')
 }
