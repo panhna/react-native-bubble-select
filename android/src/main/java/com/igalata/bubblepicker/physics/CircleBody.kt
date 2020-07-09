@@ -91,6 +91,17 @@ class CircleBody(val world: World, var position: Vec2, var radius: Float, var in
         }
     }
 
+    fun remove() {
+        isDecreasing = true
+        radius -= radius
+        reset()
+
+        if (Math.abs(radius - decreasedRadius) < radius) {
+            increased = false
+            clear()
+        }
+    }
+
     private fun reset() {
         physicalBody.fixtureList?.shape?.m_radius = radius + margin
     }

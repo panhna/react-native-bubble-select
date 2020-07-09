@@ -49,6 +49,7 @@ class PickerRenderer(val glView: View) : GLSurfaceView.Renderer {
     private var vertices: FloatArray? = null
     private var textureVertices: FloatArray? = null
     private var textureIds: IntArray? = null
+    private var hasNewItems = false
 
     private val scaleX: Float
         get() = if (glView.width < glView.height) glView.height.toFloat() / glView.width.toFloat() else 1f
@@ -68,12 +69,25 @@ class PickerRenderer(val glView: View) : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
+        if (hasNewItems) {
+            val newBody = Engine.buildBodiesWithOne(scaleX, scaleY)
+            circles.add(Item(items.last(), newBody))
+            textureIds = textureIds?.copyOf(circles.size * 2)
+            vertices = vertices?.copyOf(circles.size * 8)
+            textureVertices = textureVertices?.copyOf(circles.size * 8)
+
+            initializeItem(circles.last(), circles.size - 1)
+            verticesBuffer = vertices?.toFloatBuffer()
+            uvBuffer = textureVertices?.toFloatBuffer()
+            hasNewItems = false
+        }
+
         calculateVertices()
         Engine.move()
         drawFrame()
     }
 
-    private fun initialize() {
+    fun initialize() {
         clear()
         Engine.centerImmediately = centerImmediately
         Engine.build(items.size, scaleX, scaleY).forEachIndexed { index, body ->
@@ -150,6 +164,13 @@ class PickerRenderer(val glView: View) : GLSurfaceView.Renderer {
 
     fun release() = Engine.release()
 
+    fun addItem(item: PickerItem) {
+        synchronized(this) {
+            items.add(item)
+            hasNewItems = true;
+        }
+    }
+
     private fun getItem(position: Vec2) = position.let {
         val x = it.x.convertPoint(glView.width, scaleX)
         val y = it.y.convertPoint(glView.height, scaleY)
@@ -164,7 +185,15 @@ class PickerRenderer(val glView: View) : GLSurfaceView.Renderer {
         }
     }
 
-    private fun clear() {
+    fun remove(x: Float, y: Float) = getItem(Vec2(x, glView.height - y))?.apply {
+        if (Engine.remove(this)) {
+            listener?.let {
+                it.onBubbleRemoved(pickerItem)
+            }
+        }
+    }
+
+    fun clear() {
         circles.clear()
         Engine.clear()
     }

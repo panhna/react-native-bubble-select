@@ -57,6 +57,16 @@ object Engine {
         return bodies
     }
 
+    fun buildBodiesWithOne(scaleX: Float, scaleY: Float):CircleBody{
+        val density = interpolate(0.8f, 0.2f, radius / 100f)
+
+        val x = if (Random().nextBoolean()) -startX else startX
+        val y = if (Random().nextBoolean()) -0.5f / scaleY else 0.5f / scaleY
+        val body = CircleBody(world, Vec2(x, y), bubbleRadius * scaleX, (bubbleRadius * scaleX) * 1.3f, density)
+        bodies.add(body)
+        return body
+    }
+
     fun move() {
         toBeResized.forEach { it.circleBody.resize(resizeStep) }
         world.step(if (centerImmediately) 0.035f else step, 11, 11)
@@ -96,6 +106,17 @@ object Engine {
         item.circleBody.defineState()
 
         toBeResized.add(item)
+
+        return true
+    }
+
+    fun remove(item: Item): Boolean {
+        if (item.circleBody.isBusy) return false
+
+        item.circleBody.remove()
+
+        world.destroyBody(item.circleBody.physicalBody)
+        bodies.remove(item.circleBody)
 
         return true
     }

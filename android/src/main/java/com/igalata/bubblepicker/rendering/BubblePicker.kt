@@ -3,14 +3,18 @@ package com.igalata.bubblepicker.rendering
 import android.content.Context
 import android.graphics.PixelFormat
 import android.opengl.GLSurfaceView
-import android.support.annotation.ColorInt
+import android.os.Handler
+import androidx.annotation.ColorInt
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
+import android.widget.Toast
 import com.igalata.bubblepicker.BubblePickerListener
-import com.igalata.bubblepicker.R
+//import com.igalata.bubblepicker.R
 import com.igalata.bubblepicker.adapter.BubblePickerAdapter
 import com.igalata.bubblepicker.model.Color
 import com.igalata.bubblepicker.model.PickerItem
+import com.reactnativebubbleselect.R
 
 /**
  * Created by irinagalata on 1/19/17.
@@ -66,6 +70,38 @@ class BubblePicker : GLSurfaceView {
     private var previousX = 0f
     private var previousY = 0f
 
+    private var longPressedFlag = false
+    private val longPressedHandler = Handler()
+    private val longPressed = Runnable {
+        kotlin.run {
+            longPressedFlag = true;
+            onLongPress();
+        }
+    }
+    private val longPressedDuration: Long = 500
+
+    private val gestureDetector = GestureDetector(context, object: GestureDetector.SimpleOnGestureListener() {
+        override fun onLongPress(event: MotionEvent) {
+            renderer.remove(event.x, event.y)
+        }
+
+        override fun onDown(event: MotionEvent): Boolean {
+            startX = event.x
+            startY = event.y
+            previousX = event.x
+            previousY = event.y
+            return true;
+        }
+
+        override fun onSingleTapUp(event: MotionEvent): Boolean {
+            if (isClick(event) && !longPressedFlag) {
+                renderer.resize(event.x, event.y)
+            }
+            renderer.release()
+            return true;
+        }
+    });
+
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         setZOrderOnTop(true)
@@ -79,17 +115,8 @@ class BubblePicker : GLSurfaceView {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                startX = event.x
-                startY = event.y
-                previousX = event.x
-                previousY = event.y
-            }
-            MotionEvent.ACTION_UP -> {
-                if (isClick(event)) renderer.resize(event.x, event.y)
-                renderer.release()
-            }
             MotionEvent.ACTION_MOVE -> {
+                longPressedHandler.removeCallbacks(longPressed);
                 if (isSwipe(event)) {
                     renderer.swipe(previousX - event.x, previousY - event.y)
                     previousX = event.x
@@ -98,10 +125,20 @@ class BubblePicker : GLSurfaceView {
                     release()
                 }
             }
-            else -> release()
+            else -> gestureDetector.onTouchEvent(event);
         }
 
-        return true
+        return true;
+    }
+
+    fun addedItem(position: Int) {
+        val mAdapter = adapter ?: return
+        val item = mAdapter.getItem(position)
+        renderer.addItem(item);
+    }
+
+    private fun onLongPress() {
+        print("LONG PRESS")
     }
 
     private fun release() = postDelayed({ renderer.release() }, 0)
@@ -123,5 +160,4 @@ class BubblePicker : GLSurfaceView {
 
         array.recycle()
     }
-
 }

@@ -2,12 +2,13 @@ package com.igalata.bubblepicker.model
 
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 
 /**
  * Created by irinagalata on 1/19/17.
  */
 data class PickerItem @JvmOverloads constructor(var title: String? = null,
+                                                var id: String? = null,
                                                 var icon: Drawable? = null,
                                                 var iconOnTop: Boolean = true,
                                                 @ColorInt var color: Int? = null,
