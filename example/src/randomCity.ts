@@ -41,5 +41,5 @@ export default function randomCity() {
 }
 
 export function randomCities() {
-  return [...Array(15).keys()].map(randomCity);
+  return [...Array(3).keys()].map(randomCity);
 }

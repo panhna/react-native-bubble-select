@@ -73,7 +73,7 @@ export default function App() {
           onSelect={handleSelect}
           onDeselect={handleDeselect}
           onRemove={handleRemove}
-          backgroundColor="#776655"
+          // backgroundColor="#776655"
           width={width}
           height={height}
           // fontName={Platform.select({
