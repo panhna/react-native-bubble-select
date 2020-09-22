@@ -2,6 +2,7 @@ package com.reactnativebubbleselect
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -24,8 +25,7 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
     bubblePicker = findViewById(R.id.bubble_picker);
     bubblePicker.listener = this;
     bubblePicker.maxSelectedCount = 10000
-    bubblePicker.isLongClickable = false
-    bubblePicker.setOnLongClickListener(this);
+    bubblePicker.centerImmediately = true;
     context.addLifecycleEventListener(this);
     setupBubblePickerAdapter()
   }
@@ -38,6 +38,7 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
         return PickerItem().apply {
           val node = nodes[position]
           title = node.text
+
           id = node.id
           if (node.fontFamily !== null) {
             typeface = Typeface.create(node.fontFamily, node.fontStyle)
@@ -60,6 +61,7 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
   }
 
   fun addNode(node: BubbleSelectNodeView) {
+    Log.i("LOG", "ADD NODE")
     nodes.add(node)
     bubblePicker.addedItem(nodes.size - 1)
   }
