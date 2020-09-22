@@ -73,7 +73,7 @@ export default function App() {
           onSelect={handleSelect}
           onDeselect={handleDeselect}
           onRemove={handleRemove}
-          // backgroundColor="#776655"
+          backgroundColor="#776655"
           width={width}
           height={height}
           // fontName={Platform.select({
@@ -88,10 +88,12 @@ export default function App() {
               key={city.id}
               id={city.id}
               text={city.text}
-              color={city.color}
-              selectedColor={city.selectedColor}
+              fontColor="#000000"
+              color="#ffffff"
+              selectedColor="#006eb9"
+              selectedFontColor="#ffffff"
               selectedScale={city.selectedScale}
-              gradient={city.gradient}
+              // gradient={city.gradient}
             />
           ))}
         </BubbleSelect>

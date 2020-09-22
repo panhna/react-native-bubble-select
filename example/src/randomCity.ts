@@ -7,22 +7,26 @@ let i = 0;
 export default function randomCity() {
   const { city } = cities[Math.floor(Math.random() * cities.length)];
   i += 1;
-  let color = {};
+  // let color = {};
 
-  // assign a gradient to odd items
-  if (i % 2 === 0) {
-    color = {
-      gradient: {
-        startColor: randomColor(),
-        endColor: randomColor(),
-        direction: 'vertical',
-      },
-    };
-  } else {
-    color = {
-      color: randomColor(),
-    };
-  }
+  // // assign a gradient to odd items
+  // if (i % 2 === 0) {
+  //   color = {
+  //     gradient: {
+  //       startColor: randomColor(),
+  //       endColor: randomColor(),
+  //       direction: 'vertical',
+  //     },
+  //   };
+  // } else {
+  //   color = {
+  //     color: randomColor(),
+  //   };
+  // }
+
+  const color = {
+    color: '#ffffff',
+  };
 
   return Platform.select({
     ios: {
