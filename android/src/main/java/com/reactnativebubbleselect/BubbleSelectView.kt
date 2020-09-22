@@ -54,6 +54,8 @@ class BubbleSelectView(context: ReactContext): FrameLayout(context), LifecycleEv
             //   BubbleGradient.VERTICAL
             // )
 						color = Color.parseColor(node.color)
+            selectedColor = Color.parseColor(node.selectedColor)
+            selectedFontColor = Color.parseColor(node.selectedFontColor)
           }
         }
       }

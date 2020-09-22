@@ -74,10 +74,10 @@ data class Item(val pickerItem: PickerItem, val circleBody: CircleBody) {
 
         val canvas = Canvas(bitmap)
 
-        if (isSelected) drawImage(canvas)
+//        if (isSelected) drawImage(canvas)
         drawBackground(canvas, isSelected)
         drawIcon(canvas)
-        drawText(canvas)
+        drawText(canvas, isSelected)
 
         return bitmap
     }
@@ -87,15 +87,23 @@ data class Item(val pickerItem: PickerItem, val circleBody: CircleBody) {
         bgPaint.style = Paint.Style.FILL
         pickerItem.color?.let { bgPaint.color = pickerItem.color!! }
         pickerItem.gradient?.let { bgPaint.shader = gradient }
-        if (withImage) bgPaint.alpha = (pickerItem.overlayAlpha * 255).toInt()
+        if (withImage) {
+          bgPaint.color = pickerItem.selectedColor!!
+//          bgPaint.alpha = (pickerItem.overlayAlpha * 255).toInt()
+        }
         canvas.drawRect(0f, 0f, bitmapSize, bitmapSize, bgPaint)
     }
 
-    private fun drawText(canvas: Canvas) {
+    private fun drawText(canvas: Canvas, isSelected: Boolean) {
         if (pickerItem.title == null || pickerItem.textColor == null) return
 
         val paint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = pickerItem.textColor!!
+            if (isSelected) {
+              color = pickerItem.selectedFontColor!!
+            } else {
+              color = pickerItem.textColor!!
+            }
+
             textSize = pickerItem.textSize
             typeface = pickerItem.typeface
         }
